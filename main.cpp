@@ -127,7 +127,8 @@ void postProcessCard(Mat& image, Mat& card, string& color, string& symbol) {
     const int RANGE = 150;
 
     if (isBlurred(image, temp)) {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 3; i++) 
+        {
             GaussianBlur(card, temp, Size(3, 3), 1, 1);
             addWeighted(card, 1 + alpha, temp, -alpha, 0, card);
         }
@@ -147,15 +148,32 @@ void postProcessCard(Mat& image, Mat& card, string& color, string& symbol) {
     ch2 /= alpha;
     ch3 /= alpha;
 
-    if (ch1 >= RANGE) color = "Blue";
-    else if (ch2 >= RANGE) color = (ch3 >= RANGE) ? "Yellow" : "Green";
-    else color = "Red";
+    if (ch1 >= RANGE)
+    {
+        color = "Blue";
+    }
+    else if (ch2 >= RANGE)
+    {
+        if (ch3 >= RANGE)
+        {
+            color = "Yellow";
+        }
+        else
+        {
+            color = "Green";
+        }
+    }
+    else
+    {
+        color = "Red";
+    }
 
     symbol = computeMoments(card, symbol);
 }
 
 void drawLabels(Mat& image, vector<Point2f>& cardCenters, vector<string>& colors, vector<string>& symbols) {
-    for (size_t i = 0; i < cardCenters.size(); i++) {
+    for (size_t i = 0; i < cardCenters.size(); i++) 
+    {
         string label = colors[i] + " " + symbols[i];
         putText(image, label, cardCenters[i], FONT_HERSHEY_SIMPLEX, 2, Scalar(0, 255, 0), 3);
     }
